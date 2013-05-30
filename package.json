@@ -1,0 +1,28 @@
+{
+  "name": "mylittleproxy",
+  "version": "0.0.1",
+  "description": "Minecraft Proxy.",
+  "main": "index.js",
+  "keywords": [
+    "minecraft",
+    "protocol",
+    "parse",
+    "serialize",
+    "packet",
+    "authentication",
+    "encrypton",
+    "bot"
+  ],
+  "author": "Robin Lambertz",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8.16"
+  },
+  "dependencies": {
+    "minecraft-protocol": "*",
+    "nconf": "*",
+    "ursa": "~0.8.0",
+    "superagent": "~0.10.0",
+    "buffer-equal": "0.0.0"
+  }
+}
