@@ -19,9 +19,8 @@
     "node": ">=0.8.16"
   },
   "dependencies": {
-    "minecraft-protocol": "*",
+    "minecraft-protocol": "git://github.com/roblabla/node-minecraft-protocol.git#feature-purejsrsa-forge",
     "nconf": "*",
-    "ursa": "~0.8.0",
     "superagent": "~0.10.0",
     "buffer-equal": "0.0.0"
   }
