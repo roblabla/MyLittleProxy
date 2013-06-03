@@ -20,8 +20,6 @@
   },
   "dependencies": {
     "minecraft-protocol": "git://github.com/roblabla/node-minecraft-protocol.git#feature-purejsrsa-forge",
-    "nconf": "*",
-    "superagent": "~0.10.0",
-    "buffer-equal": "0.0.0"
+    "js-yaml": "2.0.5"
   }
 }

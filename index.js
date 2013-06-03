@@ -1,39 +1,77 @@
 var mc = require('minecraft-protocol')
-  , fs = require('fs');
+  , fs = require('fs')
+  , yaml = require('js-yaml');
+  ;
 
-// Put this in an external YAML file.
-var options = {
-  username: "Your username here",
-  password: "Your password here",
-  host: "Server to debug here",
-  port: 25565, // port to connect to
-  whitelistip: "" // This is to prohibit anyone from using your debug proxy. Leave blank to allow anyone to access
+var default_options = {
+  host: "0.0.0.0",
+  port: 25565,
+  "online-mode": true,
+  "encryptionEnabled": true,
+  motd: "A minecraft server",
+  "max-players": 1,
+  remote: {
+    host: "localhost",
+    port: 25565,
+    online_mode: false,
+    force_username: false,
+    username: "if remote.online_mode is true, valid username",
+    password: "if remote.online_mode is true, valid password",
+  }
+};
+
+var options;
+try {
+  options = require('./config.yml') || default_options;
+} catch (ex) {
+  options = default_options;
+  // Write the defaults
+  fs.writeFileSync("config.yml", yaml.dump(default_options));
 }
+
+for (var key in default_options) {
+    if (options.hasOwnProperty(key)) {
+        continue;
+    }
+    options[key] = default_options[key];
+}
+
+if (options.remote.online_mode === false) {
+    delete options.remote.password
+}
+
+/*
+var plugins = {};
+require("fs").readdirSync("./plugins").forEach(function(file) {
+  plugins[file] = require("./plugins/" + file);
+});*/
 
 // Make this more configurable
 var writestream = fs.createWriteStream('dump.txt', {flags: 'w', encoding: 'utf8'});
 
 console.log("Creating server...");
 
-// Put this in an external YAML file.
-var server = mc.createServer({
-  host: '0.0.0.0',
-  port: 25565,
-  'max-players': 1,
-  motd: "Proxy",
-  'online-mode': false,
-});
+var server = mc.createServer(options);
 
 console.log("Server listening on " + '0.0.0.0' + ":" + 25565);
 
 server.on('login', function(client) {
   console.log("Logging in");
-  if (options.whitelistip !== "" && client.socket.remoteAddress != options.whitelistip) {
+
+  // Whitelist
+  for (var whitelistip in options.whitelistips) {
+    if (whitelistip === client.socket.remoteAddress) {
+      break;
+    }
     client.end("You aren't whitelisted.");
     return;
   }
+
+  if (options.remote.online_mode === false && !options.remote.force_username) {
+    options.remote.username = client.username;
+  }
   var ready = false;
-  var remoteclient = mc.createClient(options);
+  var remoteclient = mc.createClient(options.remote);
   remoteclient.once('login', function() {
     ready = true;
     console.log("All clear !");
