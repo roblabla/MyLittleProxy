@@ -6,6 +6,7 @@ You first need to install [nodejs](http://nodejs.org/). Then all that is needed 
 
 ```bash
 git clone git://github.com/roblabla/MyLittleProxy.git
+cd MyLittleProxy
 npm install
 ```
 
